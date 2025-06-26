@@ -350,6 +350,56 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
+  //handles toggling between light and dark mode.
+  function handleThemeToggle(){
+    // Get the <html> element.
+    const html = document.documentElement; 
+    // Toggle the 'dark' class (used by Tailwind CSS).
+    html.classList.toggle('dark'); 
+    const isDarkMode = html.classList.contains('dark');
+    //Toggle the visibility of the sun and moon icons.
+    themeIconLight.classList.toggle('hidden', isDarkMode);
+    themeIconDark.classList.toggle('hidden', !isDarkMode);
+  }
+
+  //Shows or hides the scroll to top button based on the page scroll position.
+  function handleScroll(){
+    if (window.scrollY > 400) {
+        scrollToTopBtn.classList.remove('hidden');
+    } else {
+        scrollToTopBtn.classList.add('hidden');
+    }
+  }
+
+  //Smoothly scrolls the window to the top of the page.
+  function handleScrollToTop(){
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+  };
+
+  //Smoothly scrolls the page to the favorites section.
+  function handleFavoritesScroll(){
+    favoritesSection.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  //Event listeners
+  themeSwitcher.addEventListener('click', handleThemeToggle);
+  favoritesBtn.addEventListener('click', handleFavoritesScroll);
+  regionFilter.addEventListener('change', handleFilterChange);
+  document.body.addEventListener('click', handleCardClick);
+  cuisineModalCloseBtn.addEventListener('click', hideRecipeView);
+  //This allows closing the modal by clicking on the dark overlay, but not on the content itself.
+  recipeView.addEventListener('click', (e) => {
+      if (e.target === recipeView) hideRecipeView();
+  });
+  searchForm.addEventListener('submit', handleSearch);
+  window.addEventListener('scroll', handleScroll);
+  scrollToTopBtn.addEventListener('click', handleScrollToTop);
+
+
+
        
 })
 
