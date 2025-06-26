@@ -137,8 +137,54 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  
+  //Determines a spice level (1, 2, or 3) for a recipe based on its ingredients.
+  function getSpiceLevel(ingredients) {
+    // Keywords for the highest spice level (3).
+    const level3Keywords = ['hotsauce', 'red pepper', 'chilli', 'chili', 'gochujang', 'harissa', 'scotch bonnet', 'jalapeno', 'green pepper'];
+    // Keywords for a medium spice level (2).
+    const level2Keywords = ['paprika', 'black pepper', 'cayenne pepper', 'fajita', 'oregano', 'allspice', 'worcestershire sauce', 'mulukhiyah', 'cumin', 'garam masala', 'pepper'];
 
+    // First, check for any high-spice ingredients.
+    for (const ingredient of ingredients) {
+      // Uses toLowerCase for case-insensitive matching.
+      const lowercasedIngredient = ingredient.toLowerCase(); 
+      for (const keyword of level3Keywords) {
+          if (lowercasedIngredient.includes(keyword)) {
+              return 3; // If found, immediately return the highest level.
+          }
+      }
+    }
 
+    // If no high-spice ingredients were found, check for medium spice ones.
+    for (const ingredient of ingredients) {
+      const lowercasedIngredient = ingredient.toLowerCase();
+      for (const keyword of level2Keywords) {
+          if (lowercasedIngredient.includes(keyword)) {
+              return 2; // If found, return the medium level.
+          }
+      }
+    }
+    // If no spicy keywords are found, default to the lowest spice level.
+    return 1;
+    }
+
+    //Dynamically creates the HTML for the spice level indicator 
+    function createSpiceIndicator (level){
+      let icons = '';
+      // Loop three times to create three chili icons.
+      for (let i = 1; i <= 3; i++) {
+          // Conditionally set the color: orange for active, gray for inactive.
+          const iconColor = i <= level ? 'text-orange-600' : 'text-gray-300 dark:text-gray-500';
+          //sets the SVG icon in HTML.
+          icons += `
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ${iconColor}" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14.17,2.17a2,2,0,0,0-2.34,0L4,10H8v4H4v4a2,2,0,0,0,2,2h8a2,2,0,0,0,2-2V18h4V14H16V10h4Z"/>
+              </svg>
+          `;
+      }
+      return `<div class="flex" title="Spice Level: ${level}/3">${icons}</div>`;
+    }
+
+    
 })
 
