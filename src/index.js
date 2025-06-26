@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleThemeToggle(){
     // Get the <html> element.
     const html = document.documentElement; 
-    // Toggle the 'dark' class (used by Tailwind CSS).
+    // Toggle the dark class (used by Tailwind CSS).
     html.classList.toggle('dark'); 
     const isDarkMode = html.classList.contains('dark');
     //Toggle the visibility of the sun and moon icons.
