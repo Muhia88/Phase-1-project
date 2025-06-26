@@ -32,6 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
   //base api url for MEALDB API
   const MEALDB_API_URL = 'https://www.themealdb.com/api/json/v1/1/';
 
+
+
+
   //handles filteration by region
   async function handleFilterChange() {
     //stores selected region and checks if true
@@ -49,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
       renderRecipes(recipesContainer, currentRecipes);
       return;
     }
-
     try {
       //Fetch the list of meals for the selected region
       const response = await fetch(`${MEALDB_API_URL}filter.php?a=${selectedRegion}`);
@@ -78,6 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+
+
   //handles searching of the meals
   async function handleSearch (event){
     // Prevent the form from reload
@@ -92,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //initial content displayed during searching of recipies
     recipesContainer.innerHTML = `<p class="col-span-full text-center text-gray-500 dark:text-gray-400">Searching for recipes...</p>`;
-
     try {
       const response = await fetch(`${MEALDB_API_URL}search.php?s=${searchTerm}`);
       const data = await response.json();
@@ -112,6 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
       recipesContainer.innerHTML = `<p class="col-span-full text-center text-red-500">Could not perform search. Please try again.</p>`;
     }
   }
+
+
 
   //Transforms a raw 'meal' object to a more structured 'recipe' object
   function mapMealToRecipe(meal){
@@ -141,7 +146,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  //Renders an array of recipe objects into a specified container element i.e recipesContainer, favorites container
+
+
+  //Renders an array of recipe objects into a specified container element i.e recipesContainer, favoritesContainer
   function renderRecipes(container, recipes){
      // Clears any existing content from the container.
         container.innerHTML = '';
@@ -154,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             return;
         }
-
         // Iterate over each recipe and create a card for it.
         recipes.forEach(recipe => {
             // Check if the current recipe is already in the favorites list to style the heart icon.
@@ -184,15 +190,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
   }
 
-  //updates favourites section and persists favourites to localstorage
-  function updateFavoritesView() {
-      renderRecipes(favoritesContainer, favorites);
-       //Toggles the visibility of the empty message based on whether the favorites array has items.
-      emptyFavoritesMessage.classList.toggle('hidden', favorites.length > 0);
-      //Saves the updated favorites array to localStorage
-      localStorage.setItem('cuisineCompassFavorites', JSON.stringify(favorites));
-  };
-
 
 
   //Determines a spice level (1, 2, or 3) for a recipe based on its ingredients.
@@ -201,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const level3Keywords = ['hotsauce', 'red pepper', 'chilli', 'chili', 'gochujang', 'harissa', 'scotch bonnet', 'jalapeno', 'green pepper'];
     // Keywords for a medium spice level (2).
     const level2Keywords = ['paprika', 'black pepper', 'cayenne pepper', 'fajita', 'oregano', 'allspice', 'worcestershire sauce', 'mulukhiyah', 'cumin', 'garam masala', 'pepper'];
-
     // First, check for any high-spice ingredients.
     for (const ingredient of ingredients) {
       // Uses toLowerCase for case-insensitive matching.
@@ -212,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }
       }
     }
-
     // If no high-spice ingredients were found, check for medium spice ones.
     for (const ingredient of ingredients) {
       const lowercasedIngredient = ingredient.toLowerCase();
@@ -225,6 +220,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // If no spicy keywords are found, default to the lowest spice level.
     return 1;
     }
+
+
 
   //Dynamically creates the HTML for the spice level indicator 
   function createSpiceIndicator (level){
@@ -243,14 +240,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return `<div class="flex" title="Spice Level: ${level}/3">${icons}</div>`;
   }
 
-    //Converts a standard YouTube watch URL into an embeddable URL for use in an iframe
-    function getYoutubeEmbedUrl(url) {
+
+
+   //Converts a standard YouTube watch URL into an embeddable URL for use in an iframe
+  function getYoutubeEmbedUrl(url) {
         if (!url) return null;
         // This regular expression robustly extracts the video ID from various YouTube URL formats.
         const videoIdMatch = url.match(/(?:v=|\/embed\/|\.be\/)([^&\n?#]+)/);
         if (!videoIdMatch || !videoIdMatch[1]) return null;
         return `https://www.youtube.com/embed/${videoIdMatch[1]}`;
   }
+
+
 
   //Displays the selected recipe details
   function showRecipeView(recipe) {
@@ -270,7 +271,6 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
     }
-
     // Populate the modal's content with the recipe details.
     cuisineModalContent.innerHTML = `
         <div class="mb-6">
@@ -303,19 +303,30 @@ document.addEventListener("DOMContentLoaded", () => {
     recipeView.classList.remove('modal-visible');
   };
 
+
+
+   //updates favourites section and persists favourites to localstorage
+  function updateFavoritesView() {
+      renderRecipes(favoritesContainer, favorites);
+       //Toggles the visibility of the empty message based on whether the favorites array has items.
+      emptyFavoritesMessage.classList.toggle('hidden', favorites.length > 0);
+      //Saves the updated favorites array to localStorage
+      localStorage.setItem('cuisineCompassFavorites', JSON.stringify(favorites));
+  };
+
+
+
   //Handles clicks within the recipe cards
   //The single event listener on the body handles clicks for all cards
   async function handleCardClick(event)  {
     const target = event.target;
     const detailsBtn = target.closest('.details-btn');
     const favoriteBtn = target.closest('.favorite-btn');
-
     //Handles View Recipe Button Click 
     if (detailsBtn) {
       const recipeId = detailsBtn.dataset.id;
       // Find the full recipe object from either the current view or the favorites list.
       const fullRecipe = currentRecipes.find(r => r.id == recipeId) || favorites.find(r => r.id == recipeId);
-
       if (fullRecipe) {
           showRecipeView(fullRecipe);
       } else {
@@ -326,12 +337,10 @@ document.addEventListener("DOMContentLoaded", () => {
           recipeView.classList.add('modal-visible');
       }
     }
-
     //Handles Favorite Button Click
     if (favoriteBtn) {
       const recipeId = favoriteBtn.dataset.id;
       const recipeIndexInFavorites = favorites.findIndex(fav => fav.id === recipeId);
-      
       if (recipeIndexInFavorites > -1) {
           // If it's already a favorite, remove it.
           favorites.splice(recipeIndexInFavorites, 1);
