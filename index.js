@@ -303,7 +303,51 @@ document.addEventListener("DOMContentLoaded", () => {
     recipeView.classList.remove('modal-visible');
   };
 
-  
+  //Handles clicks within the recipe cards
+  //The single event listener on the body handles clicks for all cards
+  async function handleCardClick(event)  {
+    const target = event.target;
+    const detailsBtn = target.closest('.details-btn');
+    const favoriteBtn = target.closest('.favorite-btn');
+
+    //Handles View Recipe Button Click 
+    if (detailsBtn) {
+      const recipeId = detailsBtn.dataset.id;
+      // Find the full recipe object from either the current view or the favorites list.
+      const fullRecipe = currentRecipes.find(r => r.id == recipeId) || favorites.find(r => r.id == recipeId);
+
+      if (fullRecipe) {
+          showRecipeView(fullRecipe);
+      } else {
+          //error display if the recipe can't be found (should be rare).
+          cuisineModalTitle.textContent = "Error";
+          cuisineModalContent.innerHTML = `<p>Sorry, the recipe details could not be found.</p>`;
+          recipeView.classList.remove('modal-hidden');
+          recipeView.classList.add('modal-visible');
+      }
+    }
+
+    //Handles Favorite Button Click
+    if (favoriteBtn) {
+      const recipeId = favoriteBtn.dataset.id;
+      const recipeIndexInFavorites = favorites.findIndex(fav => fav.id === recipeId);
+      
+      if (recipeIndexInFavorites > -1) {
+          // If it's already a favorite, remove it.
+          favorites.splice(recipeIndexInFavorites, 1);
+      } else {
+          // If it's not a favorite, find the recipe and add it to the start of the array.
+          let recipeToAdd = currentRecipes.find(r => r.id === recipeId) || favorites.find(r => r.id === recipeId);
+          if(recipeToAdd) {
+              favorites.unshift(recipeToAdd);
+          }
+      }
+      //Re-render the main grid to update the heart icon's color.
+      renderRecipes(recipesContainer, currentRecipes); 
+      //Update the favorites section and save to localStorage.
+      updateFavoritesView();
+    }
+  }
 
 
        
