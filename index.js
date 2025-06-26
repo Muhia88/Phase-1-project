@@ -194,6 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
 
+
   //Determines a spice level (1, 2, or 3) for a recipe based on its ingredients.
   function getSpiceLevel(ingredients) {
     // Keywords for the highest spice level (3).
@@ -225,25 +226,86 @@ document.addEventListener("DOMContentLoaded", () => {
     return 1;
     }
 
-    //Dynamically creates the HTML for the spice level indicator 
-    function createSpiceIndicator (level){
-      let icons = '';
-      // Loop three times to create three chili icons.
-      for (let i = 1; i <= 3; i++) {
-          // Conditionally set the color: orange for active, gray for inactive.
-          const iconColor = i <= level ? 'text-orange-600' : 'text-gray-300 dark:text-gray-500';
-          //sets the SVG icon in HTML.
-          icons += `
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ${iconColor}" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.17,2.17a2,2,0,0,0-2.34,0L4,10H8v4H4v4a2,2,0,0,0,2,2h8a2,2,0,0,0,2-2V18h4V14H16V10h4Z"/>
-              </svg>
-          `;
+  //Dynamically creates the HTML for the spice level indicator 
+  function createSpiceIndicator (level){
+    let icons = '';
+    // Loop three times to create three chili icons.
+    for (let i = 1; i <= 3; i++) {
+     // Conditionally set the color: orange for active, gray for inactive.
+     const iconColor = i <= level ? 'text-orange-600' : 'text-gray-300 dark:text-gray-500';
+     //sets the SVG icon in HTML.
+    icons += `
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ${iconColor}" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.17,2.17a2,2,0,0,0-2.34,0L4,10H8v4H4v4a2,2,0,0,0,2,2h8a2,2,0,0,0,2-2V18h4V14H16V10h4Z"/>
+      </svg>
+    `;
       }
-      return `<div class="flex" title="Spice Level: ${level}/3">${icons}</div>`;
+    return `<div class="flex" title="Spice Level: ${level}/3">${icons}</div>`;
+  }
+
+    //Converts a standard YouTube watch URL into an embeddable URL for use in an iframe
+    function getYoutubeEmbedUrl(url) {
+        if (!url) return null;
+        // This regular expression robustly extracts the video ID from various YouTube URL formats.
+        const videoIdMatch = url.match(/(?:v=|\/embed\/|\.be\/)([^&\n?#]+)/);
+        if (!videoIdMatch || !videoIdMatch[1]) return null;
+        return `https://www.youtube.com/embed/${videoIdMatch[1]}`;
+  }
+
+  //Displays the selected recipe details
+  function showRecipeView(recipe) {
+    cuisineModalTitle.textContent = recipe.name;
+    //gets embeded url
+    const embedUrl = getYoutubeEmbedUrl(recipe.youtubeUrl);
+
+    // Conditionally create the video player HTML only if a valid embed URL exists.
+    let videoPlayerHTML = '';
+    if (embedUrl) {
+        videoPlayerHTML = `
+          <div class="mt-6">
+            <h4 class="text-lg font-semibold mb-2 text-orange-500">Video Tutorial</h4>
+            <div class="aspect-video w-full">
+              <iframe class="w-full h-full rounded-lg" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+        `;
     }
 
+    // Populate the modal's content with the recipe details.
+    cuisineModalContent.innerHTML = `
+        <div class="mb-6">
+          <h4 class="text-lg font-semibold mb-2 text-orange-500">About this Dish</h4>
+          <p class="text-gray-700 dark:text-gray-300">${recipe.culturalNote}</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-2 text-orange-500">Ingredients</h4>
+          <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 mb-4">
+              ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+          </ul>
+          <h4 class="text-lg font-semibold mb-2 text-orange-500">Instructions</h4>
+          <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
+              ${recipe.instructions.map(step => `<li>${step}</li>`).join('')}
+          </ol>
+        </div>
+        ${videoPlayerHTML}
+    `;
+    // Make the modal visible by toggling CSS classes.
+    recipeView.classList.remove('modal-hidden');
+    recipeView.classList.add('modal-visible');
+  }
 
 
-    
+  //Hides the recipe details and clears its content
+  function hideRecipeView() {
+    //Clears content to prevent old data flashing
+    cuisineModalContent.innerHTML = ''; 
+    recipeView.classList.add('modal-hidden');
+    recipeView.classList.remove('modal-visible');
+  };
+
+  
+
+
+       
 })
 
