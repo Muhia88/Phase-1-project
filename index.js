@@ -137,6 +137,50 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  //Renders an array of recipe objects into a specified container element i.e recipesContainer, favorites container
+  function renderRecipes(container, recipes){
+     // Clears any existing content from the container.
+        container.innerHTML = '';
+
+        // Handles the case where there are no recipes to display.
+        if (!recipes || recipes.length === 0) {
+            // Avoid showing this message in the favorites section (it has its own message).
+            if (container.id !== 'favorites-container') {
+                container.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 col-span-full">Sorry, no recipes found. Try a different search or region.</p>`;
+            }
+            return;
+        }
+
+        // Iterate over each recipe and create a card for it.
+        recipes.forEach(recipe => {
+            // Check if the current recipe is already in the favorites list to style the heart icon.
+            const isAlreadyFavorite = favorites.some(fav => fav.id === recipe.id);
+            const card = document.createElement('div');
+            card.className = 'bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300';
+            
+            // sets the card's inner HTML.
+            card.innerHTML = `
+                <img src="${recipe.image}" alt="${recipe.name}" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold font-display mb-2">${recipe.name}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">${recipe.region}</p>
+                    <div class="flex justify-between items-center mb-4">
+                        ${createSpiceIndicator(recipe.spiceLevel)}
+                        <button data-id="${recipe.id}" class="favorite-btn p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ${isAlreadyFavorite ? 'text-red-500' : 'text-gray-400'}" fill="${isAlreadyFavorite ? 'currentColor' : 'none'}" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" /></svg>
+                        </button>
+                    </div>
+                    <button data-id="${recipe.id}" class="details-btn w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 dark:focus:ring-offset-gray-800 transition-colors">
+                        View Recipe
+                    </button>
+                </div>
+            `;
+            // Add the newly created card to the container.
+            container.appendChild(card);
+        });
+    }
+
+
   //Determines a spice level (1, 2, or 3) for a recipe based on its ingredients.
   function getSpiceLevel(ingredients) {
     // Keywords for the highest spice level (3).
@@ -184,6 +228,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return `<div class="flex" title="Spice Level: ${level}/3">${icons}</div>`;
     }
+
+
 
     
 })
