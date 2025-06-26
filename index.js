@@ -398,8 +398,11 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener('scroll', handleScroll);
   scrollToTopBtn.addEventListener('click', handleScrollToTop);
 
-
-
-       
+  //initializes app
+  function main(){
+    recipesContainer.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 col-span-full">Please select a region or search to showcase cuisines.</p>`;
+    updateFavoritesView();
+  }
+  main();
 })
 
