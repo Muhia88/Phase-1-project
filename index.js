@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let recipesByRegionCache = {};
 
 
+  // sets array to hold the user's saved favorite recipes if found or defaults to an empty array.
+  //load this list from the localStorage to persist data between sessions
+  let favorites = JSON.parse(localStorage.getItem('cuisineCompassFavorites')) || [];
+
   //get elements
   const favoritesBtn = document.getElementById('favorites-btn');
   const themeSwitcher = document.getElementById('theme-switcher');
@@ -178,7 +182,16 @@ document.addEventListener("DOMContentLoaded", () => {
             // Add the newly created card to the container.
             container.appendChild(card);
         });
-    }
+  }
+
+  //updates favourites section and persists favourites to localstorage
+  function updateFavoritesView() {
+      renderRecipes(favoritesContainer, favorites);
+       //Toggles the visibility of the empty message based on whether the favorites array has items.
+      emptyFavoritesMessage.classList.toggle('hidden', favorites.length > 0);
+      //Saves the updated favorites array to localStorage
+      localStorage.setItem('cuisineCompassFavorites', JSON.stringify(favorites));
+  };
 
 
   //Determines a spice level (1, 2, or 3) for a recipe based on its ingredients.
