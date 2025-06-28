@@ -8,6 +8,9 @@ This application provides a modern and intuitive interface for exploring recipes
 
 The project is styled with **Tailwind CSS**, imported via a CDN, and features a sleek, responsive design that includes a dark mode theme.
 
+[Here is a video explaining the website in depth](https://www.loom.com/share/6f3fa485b41c41e5b7228bfb8764e10b?sid=868eaa17-03a5-4c96-ab43-566163e85481)
+
+
 **Key Features:**
 
 * **Explore by Region:** Users can select a region from a dropdown list to view a variety of meals from that area.
